@@ -10,7 +10,9 @@
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "quasar build",
+    "predeploy": "quasar build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
@@ -19,6 +21,7 @@
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
+    "gh-pages": "^6.1.1",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.0.0",
     "vite-plugin-checker": "^0.7.1",
@@ -32,5 +35,6 @@
     "node": "^20 || ^18 || ^16",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
-  }
+  },
+  "homepage": "https://dgomez19.github.io/pasarela_productos"
 }
