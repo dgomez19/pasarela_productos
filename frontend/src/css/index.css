@@ -1,0 +1,49 @@
+.loading_container {
+  box-sizing: content-box;
+
+  width: 100%;
+  height: 100%;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-wrap: nowrap;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.loading_child {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading_child img {
+  margin-bottom: 16px;
+}
+
+.loading_child svg {
+  color: #3a65e4;
+
+  vertical-align: middle;
+  animation:spin 4s linear infinite;
+}
+
+@-moz-keyframes spin {
+  100% { -moz-transform: rotate(360deg); }
+}
+
+@-webkit-keyframes spin {
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  100% {
+      -webkit-transform: rotate(360deg);
+      transform:rotate(360deg);
+  }
+}

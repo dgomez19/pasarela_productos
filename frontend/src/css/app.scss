@@ -1,0 +1,22 @@
+// app global css in SCSS form
+@font-face {
+  font-family: 'Open Sans';
+  src: url('src/css/fonts/open-sans.ttf');
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('src/css/fonts/noto-sans.ttf');
+}
+
+body {
+  color: $dark;
+}
+
+.q-table th {
+  font-weight: 600;
+}
+
+.q-dialog__backdrop {
+  backdrop-filter: blur(6px);
+}
