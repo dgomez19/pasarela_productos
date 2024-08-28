@@ -39,9 +39,11 @@
 
 <script setup>
 
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 import CreditCardForm from 'src/components/credit-card/CreditCardForm.vue'
+
+import { api } from 'src/boot/axios'
 
 const products = ref([])
 
@@ -98,8 +100,18 @@ products.value = [
     total: '20.99'
   }
 ]
-</script>
 
+const loadProducts = async () => {
+  const { data } = await api.get('http://localhost:3000/products')
+  console.log(data)
+  products.value = data
+}
+
+onMounted(() => {
+  loadProducts()
+})
+
+</script>
 
 <style>
 .us {
