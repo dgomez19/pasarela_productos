@@ -8,8 +8,6 @@ export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   private async validate(data: Product) {
-    console.log('validate', data);
-
     if (!data.price) {
       throw new NotFoundException('El campo "Precio" es obligatorio', {
         description: `price es un campo obligatorio`,

@@ -36,10 +36,7 @@
 
                     <div class="col-md-3 form-group">
                       <p class="total">
-                        <span>
-                          US$
-                        </span>
-                        {{ product.price }}
+                        ${{ new Intl.NumberFormat("en-IN").format(product.price) }}
                       </p>
                     </div>
                   </div>
@@ -51,10 +48,7 @@
 
                     <div class="col-md-3 form-group">
                       <p class="total">
-                        <span>
-                          US$
-                        </span>
-                        {{ product.value_delivery }}
+                        ${{ new Intl.NumberFormat("en-IN").format(product.valueDelivery) }}
                       </p>
                     </div>
                   </div>
@@ -66,10 +60,7 @@
 
                     <div class="col-md-3 form-group">
                       <p class="total">
-                        <span>
-                          US$
-                        </span>
-                        {{ product.total }}
+                        ${{ new Intl.NumberFormat("en-IN").format(product.total) }}
                       </p>
                     </div>
                   </div>
@@ -78,51 +69,17 @@
               </q-card>
             </div>
           </div>
-          <q-form ref="$form" @submit="submit">
-            <div class="row">
-              <div style="width:100%;">
-                <q-input dense v-model="emailValue" label="Correo electrónico *" lazy-rules :rules="[required, email]" />
-              </div>
+
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <PaymentButton
+                :price="product.price"
+                :productId="product.id"
+                :valueDelivery="product.valueDelivery"
+              />
             </div>
+          </div>
 
-            <div class="row">
-              <div style="width:100%;">
-                <q-input dense v-model="address" label="Dirección *" lazy-rules :rules="[required]" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div style="width:100%">
-                <q-input dense v-model="creditNumber" label="Número de la tarjeta *" lazy-rules :rules="[required, numeric]" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div style="width:100%">
-                <q-input dense v-model="creditHolder" label="Titular de la tarjeta *" lazy-rules :rules="[required]" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-3 form-group">
-                <q-input dense v-model="creditMonth" label="Mes *" lazy-rules :rules="[required, numeric, maxLen(2)]" />
-              </div> <div class="col-md-1">&nbsp;</div>
-
-              <div class="col-md-3 form-group">
-                <q-input dense v-model="creditYear" label="Año *" lazy-rules :rules="[required, numeric, maxLen(4)]" />
-              </div> <div class="col-md-1 form-group">&nbsp;</div>
-
-              <div class="col-md-3 form-group">
-                <q-input dense v-model="creditCcv" label="CVV *" lazy-rules :rules="[required, numeric, maxLen(3)]" />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12 form-group">
-                <q-btn unelevated no-caps size="15px" style="width:100%" type="submit" icon="save" label="Realizar compra" color="primary" />
-              </div>
-            </div>
-          </q-form>
         </q-card-section>
 
       </q-scroll-area>
@@ -133,10 +90,12 @@
 <script setup>
 import { ref } from 'vue'
 
+import PaymentButton from 'src/components/PaymentButton.vue'
+
 import { maxLen, required, numeric, email } from 'src/lib/validators'
 
 const product = ref({})
-const dani = ref(null)
+
 const $dialog = ref(null)
 const $form = ref(null)
 
@@ -151,12 +110,6 @@ const address = ref(null)
 const show = async (data) => {
   product.value = data
   $dialog.value?.show()
-}
-
-const submit = async (row) => {
-  const success = await $form?.value.validate()
-
-  if (!success) return
 }
 
 defineExpose({ show })

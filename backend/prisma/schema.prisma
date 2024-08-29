@@ -28,4 +28,26 @@ model Product {
   description String @db.Text
   image String @db.VarChar(255)
   total Decimal @db.Decimal(9, 2)
+  payments Payment[]
+  valueDelivery Decimal? @db.Decimal(9, 2)
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+  uuid String @default(uuid())
+  product Product @relation(fields: [productId], references: [id])
+  productId Int
+  email String?
+  bank_account String?
+  description String?
+  paymentId String
+  status String
+  value Decimal @db.Decimal(9, 2)
+  userIp String
+  bank String?
+  cus String?
+  urlRedirect String?
+  valueDelivery Decimal @db.Decimal(9, 2)
+  address String?
+  paymentWompiId String?
 }

@@ -5,10 +5,13 @@ import { ProductsController } from './controllers/products/products.controller';
 import { CategoriesController } from './controllers/categories/categories.controller';
 import { ProductsService } from './controllers/products/products.service';
 import { ProductsModule } from './controllers/products/products.module';
+import { PaymentsController } from './controllers/payments/payments.controller';
+import { PaymentsService } from './controllers/payments/payments.service';
+import { PaymentsModule } from './controllers/payments/payments.module';
 
 @Module({
-  imports: [ProductsModule],
-  controllers: [AppController, ProductsController, CategoriesController],
-  providers: [AppService, ProductsService],
+  imports: [ProductsModule, PaymentsModule],
+  controllers: [AppController, ProductsController, CategoriesController, PaymentsController],
+  providers: [AppService, ProductsService, PaymentsService],
 })
 export class AppModule {}

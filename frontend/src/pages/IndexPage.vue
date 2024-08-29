@@ -36,7 +36,6 @@
   </div>
 </template>
 
-
 <script setup>
 
 import { ref, onMounted } from 'vue'
@@ -103,7 +102,6 @@ products.value = [
 
 const loadProducts = async () => {
   const { data } = await api.get('http://localhost:3000/products')
-  console.log(data)
   products.value = data
 }
 
