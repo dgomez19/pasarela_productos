@@ -8,9 +8,10 @@ import { ProductsModule } from './controllers/products/products.module';
 import { PaymentsController } from './controllers/payments/payments.controller';
 import { PaymentsService } from './controllers/payments/payments.service';
 import { PaymentsModule } from './controllers/payments/payments.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [ProductsModule, PaymentsModule],
+  imports: [ProductsModule, PaymentsModule, HttpModule],
   controllers: [AppController, ProductsController, CategoriesController, PaymentsController],
   providers: [AppService, ProductsService, PaymentsService],
 })

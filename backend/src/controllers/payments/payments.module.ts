@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,6 +9,6 @@ import { PaymentsService } from './payments.service';
   controllers: [PaymentsController],
   providers: [PaymentsService, PrismaService],
   exports: [PaymentsService, PrismaService],
-  imports: [PrismaModule],
+  imports: [PrismaModule, HttpModule],
 })
 export class PaymentsModule {}

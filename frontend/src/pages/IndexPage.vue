@@ -103,6 +103,7 @@ products.value = [
 const loadProducts = async () => {
   const { data } = await api.get('http://localhost:3000/products')
   products.value = data
+  console.log(data)
 }
 
 onMounted(() => {

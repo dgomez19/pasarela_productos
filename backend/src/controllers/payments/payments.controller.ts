@@ -11,15 +11,13 @@ export class PaymentsController {
     return this.paymentService.startPayment(data, ip);
   }
 
-  @Get('verify-payment/:paymentWompiId')
-  async verifyPayment(@Param() paymentWompiId: string) {
-    console.log(paymentWompiId);
-    return paymentWompiId;
+  @Get('verify-payment')
+  async verifyPayment() {
+    return this.paymentService.verifyPayment();
   }
 
   @Post('listening-payment')
   async listeningPayment(@Body() data) {
-    console.log('D A T A DE W O M P I', data);
-    return data;
+    return this.paymentService.listeningPayment(data);
   }
 }

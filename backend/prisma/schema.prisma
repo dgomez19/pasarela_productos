@@ -40,7 +40,7 @@ model Payment {
   email String?
   bank_account String?
   description String?
-  paymentId String
+  paymentId String @unique
   status String
   value Decimal @db.Decimal(9, 2)
   userIp String

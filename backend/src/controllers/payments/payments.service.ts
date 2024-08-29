@@ -1,17 +1,30 @@
-import { Injectable, NotFoundException, Ip } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  Ip,
+  HttpException,
+} from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
 import { Payment } from '@prisma/client';
+import { HttpService } from '@nestjs/axios';
+import { catchError, firstValueFrom } from 'rxjs';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class PaymentsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly httpService: HttpService,
+  ) {}
 
   STATUS_PAYMENT_PENDING = 'PENDING';
   STATUS_PAYMENT_APPROVED = 'APPROVED';
   STATUS_PAYMENT_DECLINED = 'DECLINED';
   STATUS_PAYMENT_ERROR = 'ERROR';
+
+  PAYMENT_URL_TRANSACTION = 'https://api-sandbox.wompi.co/v1/transactions/';
 
   private async generatepaymentId() {
     try {
@@ -41,6 +54,19 @@ export class PaymentsService {
     // <TODO> Consultar si el id ya existe, lo genere nuevamente.
   }
 
+  async getAllPaymentsPending(): Promise<Payment[]> {
+    return this.prisma.payment.findMany({
+      where: {
+        status: this.STATUS_PAYMENT_PENDING,
+        NOT: [
+          {
+            paymentWompiId: null,
+          },
+        ],
+      },
+    });
+  }
+
   private async checkPendingPayments(productId, ip) {
     return this.prisma.payment.findFirst({
       where: {
@@ -48,6 +74,23 @@ export class PaymentsService {
         productId: productId,
         userIp: ip,
       },
+    });
+  }
+
+  private async getPaymentByPaymentId(paymentId) {
+    return this.prisma.payment.findFirst({
+      where: {
+        paymentId: paymentId,
+      },
+    });
+  }
+
+  async updatePayment(id: number, data: Payment): Promise<Payment> {
+    return this.prisma.payment.update({
+      where: {
+        id: id,
+      },
+      data,
     });
   }
 
@@ -68,6 +111,57 @@ export class PaymentsService {
 
     return this.prisma.payment.create({
       data,
+    });
+  }
+
+  async listeningPayment(data) {
+    if (Object.keys(data).length === 0) {
+      throw new NotFoundException('¡ERROR!', {
+        description: 'No se encontraron datos en el body',
+      });
+    }
+
+    try {
+      const payment = await this.getPaymentByPaymentId(
+        data.data.transaction.reference,
+      );
+
+      if (!payment) {
+        throw new NotFoundException('¡ERROR!', {
+          description: 'No se encontraron datos del pago',
+        });
+      }
+
+      payment.status = data.data.transaction.status;
+      payment.paymentWompiId = data.data.transaction.id;
+
+      this.updatePayment(payment.id, payment);
+    } catch (error) {
+      throw new HttpException(error, 500);
+    }
+  }
+
+  async verifyPayment() {
+    const paymentsPending = await this.getAllPaymentsPending();
+
+    await paymentsPending.forEach(async (value) => {
+      const { data } = await firstValueFrom(
+        this.httpService
+          .get(`${this.PAYMENT_URL_TRANSACTION}${value.paymentWompiId}`)
+          .pipe(
+            catchError((error: AxiosError) => {
+              throw 'An error happened!';
+            }),
+          ),
+      );
+
+      const newData = {
+        data: {
+          transaction: data.data,
+        },
+      };
+
+      await this.listeningPayment(newData);
     });
   }
 }
