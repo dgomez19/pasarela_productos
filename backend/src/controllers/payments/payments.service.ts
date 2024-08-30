@@ -5,7 +5,8 @@ import {
   HttpException,
 } from '@nestjs/common';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+// import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 import { Payment } from '@prisma/client';
 import { HttpService } from '@nestjs/axios';
@@ -107,8 +108,26 @@ export class PaymentsService {
     });
   }
 
+  private async existProduct(productId) {
+    const product = await this.product.getProductById(productId);
+
+    if (!product) {
+      throw new NotFoundException('¡ERROR!', {
+        description: 'No se encontró información del producto',
+      });
+    }
+
+    if (product.quantityAvailable <= 0) {
+      throw new NotFoundException('¡ERROR!', {
+        description: 'No existen mas existencias de este producto',
+      });
+    }
+  }
+
   async startPayment(data: Payment, ip): Promise<Payment> {
     const paymentId = await this.generatepaymentId();
+
+    const existProduct = await this.existProduct(data.productId);
 
     const isPending = await this.checkPendingPayments(data.productId, ip);
 
@@ -135,8 +154,6 @@ export class PaymentsService {
   }
 
   async listeningPayment(data) {
-    console.log('XXXX', data);
-
     if (Object.keys(data).length === 0) {
       throw new NotFoundException('¡ERROR!', {
         description: 'No se encontraron datos en el body',
@@ -156,11 +173,12 @@ export class PaymentsService {
 
       payment.status = data.data.transaction.status;
       payment.paymentWompiId = data.data.transaction.id;
+      payment.name = data.data.transaction.customerData?.fullName;
+      payment.email = data.data.transaction.customerEmail;
 
       if (data.data.transaction.status === this.STATUS_PAYMENT_APPROVED) {
         this.discountProduct(payment.productId);
       }
-
       return this.updatePayment(payment.id, payment);
     } catch (error) {
       throw new HttpException(error, 500);
@@ -186,9 +204,10 @@ export class PaymentsService {
           transaction: data.data,
         },
       };
-
       await this.listeningPayment(newData);
     });
+
+    console.log('asdnjsadhjsahdhkjasd');
   }
 
   async verifyPaymentByPaymentWompiId(id) {

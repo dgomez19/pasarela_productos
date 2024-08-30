@@ -1,12 +1,10 @@
 <template>
   <q-form ref="$form" @submit="submit">
-    <div class="row">
-      <div style="width:100%;">
-        <q-input dense v-model="emailValue" label="Correo electrónico *" lazy-rules :rules="[required, email]" />
-      </div>
-    </div>
-
-    <q-btn unelevated no-caps size="15px" style="width:100%" type="submit" icon="save" label="Realizar compra" color="primary" />
+    <q-btn :disabled="props.quantityAvailable <= 0" unelevated no-caps size="15px" style="width:100%" type="submit" icon="save" label="Realizar compra" color="primary">
+      <q-tooltip v-if="props.quantityAvailable <= 0">
+        NO PUEDE REALIZAR LA COMPRA, YA QUE EL PRODUCTO SE ENCUENTRA AGOTADO
+      </q-tooltip>
+    </q-btn>
   </q-form>
 </template>
 
@@ -21,16 +19,13 @@ import { Notify } from 'quasar'
 
 import { useRouter } from 'vue-router'
 
-const props = defineProps({ price: String, productId: Number, valueDelivery: String })
+const props = defineProps({ price: String, productId: Number, valueDelivery: String, quantityAvailable: Number })
 
 const $router = useRouter()
-
-const emailValue = ref(null)
 
 const submit = async () => {
   try {
     const { data } = await api.post('payments/start-payment', {
-      email: emailValue.value,
       status: PENDING,
       value: props.price,
       valueDelivery: props.valueDelivery,
@@ -59,18 +54,6 @@ const generateModalWompi = async (reference) => {
     publicKey: PUBLIC_KEY,
     signature: {
       integrity : signature
-    },
-    taxInCents: { // Opcional
-      vat: 1900,
-      consumption: 800
-    },
-    customerData: { // Opcional
-      email: emailValue.value,
-      fullName: 'Lola Flores',
-      phoneNumber: '3040777777',
-      phoneNumberPrefix: '+57',
-      legalId: '123456789',
-      legalIdType: 'CC'
     }
   }
 
@@ -85,9 +68,13 @@ const generateModalWompi = async (reference) => {
       },
     };
 
-    // const { data } = await api.post('payments/listening-payment', newData)
-
-    // $router.push(`payment/${data.paymentWompiId}/verify`)
+    try {
+      const { data } = await api.post('payments/listening-payment', newData)
+      console.log('data', data)
+      $router.push(`payment/${data.paymentWompiId}/verify`)
+    } catch(error) {
+      console.log(error)
+    }
   })
 }
 

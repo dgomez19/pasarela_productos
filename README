@@ -1,0 +1,11 @@
+# Integración pasarela de pagos Wompi
+
+## Ambiente de desarrollo
+* Backend: NestJS + Postgresql
+* Frontend: VueJS + Quasar
+
+## Ver productos creados:
+```bash
+verify-payment
+```
+

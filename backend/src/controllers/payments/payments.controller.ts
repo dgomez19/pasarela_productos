@@ -13,7 +13,6 @@ export class PaymentsController {
 
   @Get('verify-payment/:paymentWompiId')
   async verifyPaymentByPaymentWompiId(@Param('paymentWompiId') id: string) {
-    console.log('000', id);
     return this.paymentService.verifyPaymentByPaymentWompiId(id);
   }
 
@@ -24,6 +23,7 @@ export class PaymentsController {
 
   @Post('listening-payment')
   async listeningPayment(@Body() data) {
+    console.log('data', data);
     return this.paymentService.listeningPayment(data);
   }
 }

@@ -94,6 +94,7 @@
                 :price="product.total"
                 :productId="product.id"
                 :valueDelivery="product.valueDelivery"
+                :quantityAvailable="product.quantityAvailable"
               />
             </div>
           </div>
