@@ -135,6 +135,8 @@ export class PaymentsService {
   }
 
   async listeningPayment(data) {
+    console.log('XXXX', data);
+
     if (Object.keys(data).length === 0) {
       throw new NotFoundException('¡ERROR!', {
         description: 'No se encontraron datos en el body',
@@ -154,8 +156,6 @@ export class PaymentsService {
 
       payment.status = data.data.transaction.status;
       payment.paymentWompiId = data.data.transaction.id;
-
-      // console.log('XXXX', data.transaction.customer_data);
 
       if (data.data.transaction.status === this.STATUS_PAYMENT_APPROVED) {
         this.discountProduct(payment.productId);
