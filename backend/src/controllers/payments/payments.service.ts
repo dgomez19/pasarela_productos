@@ -11,12 +11,14 @@ import { Payment } from '@prisma/client';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
+import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class PaymentsService {
   constructor(
     private prisma: PrismaService,
     private readonly httpService: HttpService,
+    private product: ProductsService,
   ) {}
 
   STATUS_PAYMENT_PENDING = 'PENDING';
@@ -85,6 +87,17 @@ export class PaymentsService {
     });
   }
 
+  async getPaymentByWompiId(id: string): Promise<Payment> {
+    return this.prisma.payment.findFirst({
+      where: {
+        paymentWompiId: id,
+      },
+      include: {
+        product: true,
+      },
+    });
+  }
+
   async updatePayment(id: number, data: Payment): Promise<Payment> {
     return this.prisma.payment.update({
       where: {
@@ -114,6 +127,13 @@ export class PaymentsService {
     });
   }
 
+  private async discountProduct(id: number) {
+    const product = await this.product.getProductById(id);
+
+    product.quantityAvailable = (product.quantityAvailable - 1);
+    this.product.updateProduct(id, product);
+  }
+
   async listeningPayment(data) {
     if (Object.keys(data).length === 0) {
       throw new NotFoundException('¡ERROR!', {
@@ -135,7 +155,13 @@ export class PaymentsService {
       payment.status = data.data.transaction.status;
       payment.paymentWompiId = data.data.transaction.id;
 
-      this.updatePayment(payment.id, payment);
+      // console.log('XXXX', data.transaction.customer_data);
+
+      if (data.data.transaction.status === this.STATUS_PAYMENT_APPROVED) {
+        this.discountProduct(payment.productId);
+      }
+
+      return this.updatePayment(payment.id, payment);
     } catch (error) {
       throw new HttpException(error, 500);
     }
@@ -163,5 +189,9 @@ export class PaymentsService {
 
       await this.listeningPayment(newData);
     });
+  }
+
+  async verifyPaymentByPaymentWompiId(id) {
+    return await this.getPaymentByWompiId(id);
   }
 }

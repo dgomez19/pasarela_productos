@@ -6,9 +6,18 @@ const routes = [
       { path: '', component: () => import('pages/IndexPage.vue') }
     ]
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
+  {
+    path: '/payment',
+    redirect: { name: 'payment' },
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: ':paymentWompiId/verify',
+        name: 'verify',
+        component: () => import('pages/verifyPayment.vue')
+      }
+    ]
+  },
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')

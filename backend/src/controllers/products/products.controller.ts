@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Body,
+  Injectable,
 } from '@nestjs/common';
 
 import { ProductsService } from './products.service';

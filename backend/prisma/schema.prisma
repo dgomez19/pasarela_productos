@@ -22,7 +22,6 @@ model Task {
 
 model Product {
   id Int @id @default(autoincrement())
-  uuid String @default(uuid())
   price Decimal @db.Decimal(9, 2)
   name String @db.VarChar(255)
   description String @db.Text
@@ -30,13 +29,14 @@ model Product {
   total Decimal @db.Decimal(9, 2)
   payments Payment[]
   valueDelivery Decimal? @db.Decimal(9, 2)
+  quantityAvailable Int @default(10)
 }
 
 model Payment {
   id Int @id @default(autoincrement())
-  uuid String @default(uuid())
   product Product @relation(fields: [productId], references: [id])
   productId Int
+  name String?
   email String?
   bank_account String?
   description String?
@@ -49,5 +49,5 @@ model Payment {
   urlRedirect String?
   valueDelivery Decimal @db.Decimal(9, 2)
   address String?
-  paymentWompiId String?
+  paymentWompiId String? @unique
 }

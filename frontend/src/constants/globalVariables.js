@@ -2,3 +2,20 @@ export const PUBLIC_KEY = 'pub_test_Alng5tchu2XgPuD5u3DaNE5ju0oH6zJy'
 export const CURRENCY = 'COP'
 export const INTEGRITY_KEY = 'test_integrity_SMoZaK0HQx7PP2goHuDn0LCzFVPk0Ldi'
 export const PENDING = 'PENDING'
+
+export const STATUS_PAYMENT_PENDING = 'PENDING';
+export const STATUS_PAYMENT_APPROVED = 'APPROVED';
+export const STATUS_PAYMENT_DECLINED = 'DECLINED';
+export const STATUS_PAYMENT_ERROR = 'ERROR';
+
+export const TRADUCTION_STATUS = {
+  [STATUS_PAYMENT_PENDING]: 'PENDIENTE',
+  [STATUS_PAYMENT_APPROVED]: 'APROBADO',
+  [STATUS_PAYMENT_DECLINED]: 'RECHAZADO',
+}
+
+export const COLOR_STATUS = {
+  [STATUS_PAYMENT_PENDING]: 'orange',
+  [STATUS_PAYMENT_APPROVED]: 'green',
+  [STATUS_PAYMENT_DECLINED]: 'red'
+}

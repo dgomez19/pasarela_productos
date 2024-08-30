@@ -19,7 +19,7 @@
           <div class="row" style="text-align: center;margin: auto;width: 50%;padding: 10px;">
             <div class="col-md-12 form-group">
               <q-card class="my-card">
-                <img :src="product.image" alt="colombia_logo" class="cursor-pointer" />
+                <img :src="`${url}${product.image}`" alt="colombia_logo" class="cursor-pointer" />
 
                 <q-card-section>
                   <div class="row">
@@ -27,28 +27,30 @@
                       <div class="text-h6">{{ product.name }}</div>
                       <div class="text-subtitle2">{{ product.description }}</div>
                     </div>
+                  </div> <br>
+
+                  <div class="row">
+                    <div class="col-md-6 form-group" style="text-align:left">
+                      Valor del producto:
+                    </div>
                   </div>
 
                   <div class="row">
-                    <div class="col-md-9 form-group" style="text-align:left">
-                      Valor del producto:
+                    <div class="col-md-6 form-group price" style="text-align:left;">
+                      ${{ new Intl.NumberFormat().format(product.price) }}
                     </div>
-
-                    <div class="col-md-3 form-group">
-                      <p class="total">
-                        ${{ new Intl.NumberFormat("en-IN").format(product.price) }}
-                      </p>
-                    </div>
-                  </div>
+                  </div> <br>
 
                   <div class="row">
                     <div class="col-md-9 form-group" style="text-align:left">
                       Valor de la entrega:
                     </div>
+                  </div>
 
-                    <div class="col-md-3 form-group">
-                      <p class="total">
-                        ${{ new Intl.NumberFormat("en-IN").format(product.valueDelivery) }}
+                  <div class="row">
+                    <div class="col-md-3 form-group" style="text-align:left">
+                      <p class="price">
+                        ${{ new Intl.NumberFormat().format(product.valueDelivery) }}
                       </p>
                     </div>
                   </div>
@@ -57,10 +59,26 @@
                     <div class="col-md-9 form-group" style="text-align:left">
                       TOTAL:
                     </div>
+                  </div>
 
-                    <div class="col-md-3 form-group">
-                      <p class="total">
-                        ${{ new Intl.NumberFormat("en-IN").format(product.total) }}
+                  <div class="row">
+                    <div class="col-md-3 form-group" style="text-align:left">
+                      <p class="price">
+                        ${{ new Intl.NumberFormat().format(product.total) }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-9 form-group" style="text-align:left">
+                      CANTIDAD DISPONIBLE:
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-3 form-group" style="text-align:left">
+                      <p class="price">
+                        {{ new Intl.NumberFormat().format(product.quantityAvailable) }}
                       </p>
                     </div>
                   </div>
@@ -73,7 +91,7 @@
           <div class="row">
             <div class="col-md-12 form-group">
               <PaymentButton
-                :price="product.price"
+                :price="product.total"
                 :productId="product.id"
                 :valueDelivery="product.valueDelivery"
               />
@@ -98,6 +116,8 @@ const product = ref({})
 
 const $dialog = ref(null)
 const $form = ref(null)
+
+const url = ref(process.env.API_URL)
 
 const creditNumber = ref(null)
 const creditHolder = ref(null)

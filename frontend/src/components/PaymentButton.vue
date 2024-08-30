@@ -17,17 +17,19 @@ import { ref } from 'vue'
 
 import { PUBLIC_KEY, CURRENCY, INTEGRITY_KEY, PENDING } from 'src/constants/globalVariables'
 
-import { maxLen, required, numeric, email } from 'src/lib/validators'
-
 import { Notify } from 'quasar'
 
+import { useRouter } from 'vue-router'
+
 const props = defineProps({ price: String, productId: Number, valueDelivery: String })
+
+const $router = useRouter()
 
 const emailValue = ref(null)
 
 const submit = async () => {
   try {
-    const { data } = await api.post('http://127.0.0.1:3000/payments/start-payment', {
+    const { data } = await api.post('payments/start-payment', {
       email: emailValue.value,
       status: PENDING,
       value: props.price,
@@ -58,7 +60,6 @@ const generateModalWompi = async (reference) => {
     signature: {
       integrity : signature
     },
-    redirectUrl: 'https://transaction-redirect.wompi.co/check', // Opcional
     taxInCents: { // Opcional
       vat: 1900,
       consumption: 800
@@ -75,12 +76,18 @@ const generateModalWompi = async (reference) => {
 
   const checkout = await new WidgetCheckout(params)
 
-  console.log('checkout', checkout)
-
-  checkout.open(function (result) {
+  checkout.open(async function (result) {
     var transaction = result.transaction;
-    console.log("Transaction ID: ", transaction.id);
-    console.log("Transaction object: ", transaction);
+
+    const newData = {
+      data: {
+        transaction: transaction,
+      },
+    };
+
+    // const { data } = await api.post('payments/listening-payment', newData)
+
+    // $router.push(`payment/${data.paymentWompiId}/verify`)
   })
 }
 
@@ -91,7 +98,7 @@ const generateSignature = async (reference, price) => {
   const encondedText = new TextEncoder().encode(signature);
   const hashBuffer = await crypto.subtle.digest("SHA-256", encondedText);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(""); // "37c8407747e595535433ef8f6a811d853cd943046624a0ec04662b17bbf33bf5"
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   
   return hashHex
 }

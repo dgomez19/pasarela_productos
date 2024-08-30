@@ -3,16 +3,39 @@
     <div class="row">
       <div class="col-md-4 form-group" v-for="(product, index) in products" v-bind:key="index">
         <q-card class="my-card" style="margin: 1% 4% 1% 1%;">
-          <img :src="product.image" alt="colombia_logo" class="cursor-pointer" />
+          <img :src="`${url}${product.image}`" alt="colombia_logo" class="cursor-pointer" style="height:500px"/>
 
           <q-card-section>
             <div class="text-h6">{{ product.name }}</div>
-            <div class="text-subtitle2">{{ product.description }}</div>
-            <p>
-              <span class="us">US$</span>
-              <span class="price">{{ product.price.split('.')[0] }}</span>
-              <span class="decimal">{{ product.price.split('.')[1] }}</span>
-            </p>
+            <div class="text-subtitle2">{{ product.description.substring(0, 90) }} ...</div> <br>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <span class="us">Precio</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <span class="price">
+                  ${{ new Intl.NumberFormat().format(product.price) }}
+                </span>
+              </div>
+            </div> <br>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <span class="us">Cantidad disponible</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <span class="price">
+                  {{ new Intl.NumberFormat().format(product.quantityAvailable) }}
+                </span>
+              </div>
+            </div>
 
             <div style="text-align:right;">
               <q-btn color="primary" @click="showForm(product)">
@@ -46,64 +69,17 @@ import { api } from 'src/boot/axios'
 
 const products = ref([])
 
+const url = ref(process.env.API_URL)
+
 const $form = ref(null)
 
 const showForm = (product) => {
   $form.value?.show(product)
 }
 
-products.value = [
-  {
-    uuid: 'uuid',
-    name: 'Producto prueba',
-    description: 'Lorem ipsum',
-    image: "/src/assets/pc.webp",
-    price: '10.99',
-    value_delivery: '1.50',
-    total: '20.99'
-  },
-  {
-    uuid: 'uuid',
-    name: 'Producto prueba',
-    description: 'Lorem ipsum',
-    image: "/src/assets/pc.webp",
-    price: '10.99',
-    value_delivery: '1.50',
-    total: '20.99'
-  },
-  {
-    uuid: 'uuid',
-    name: 'Producto prueba',
-    description: 'Lorem ipsum',
-    image: "/src/assets/pc.webp",
-    price: '10.99',
-    value_delivery: '1.50',
-    total: '20.99'
-  },
-  {
-    uuid: 'uuid',
-    name: 'Producto prueba',
-    description: 'Lorem ipsum',
-    image: "/src/assets/pc.webp",
-    price: '10.99',
-    value_delivery: '1.50',
-    total: '20.99'
-  },
-  {
-    uuid: 'uuid',
-    name: 'Producto prueba',
-    description: 'Lorem ipsum',
-    image: "/src/assets/pc.webp",
-    price: '10.99',
-    value_delivery: '1.50',
-    total: '20.99'
-  }
-]
-
 const loadProducts = async () => {
-  const { data } = await api.get('http://localhost:3000/products')
+  const { data } = await api.get('products')
   products.value = data
-  console.log(data)
 }
 
 onMounted(() => {
@@ -120,7 +96,8 @@ onMounted(() => {
 }
 
 .price {
-  font-size: 35px;
+  font-size: 20px;
+  color: brown;
 }
 
 .decimal {
