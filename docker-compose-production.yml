@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  pasarela-frontend:
+    build:
+      context: ./frontend/
+      target: 'production-stage'
+    image: pasarela-frontend
+    container_name: pasarela-frontend
+    restart: unless-stopped
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/nginx.conf
+      - /media/:/media/
+      - /public/:/public/
+    ports:
+    - 80:80
