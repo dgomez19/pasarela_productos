@@ -62,7 +62,7 @@ module.exports = configure(function ( ctx ) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        API_URL: ctx.dev ? 'http://127.0.0.1:3000/' : '/api/v1/'
+        API_URL: ctx.dev ? 'http://127.0.0.1:9000' : 'http://159.223.190.18:3333'
       },
       // rawDefine: {}
       // ignorePublicFolder: true,

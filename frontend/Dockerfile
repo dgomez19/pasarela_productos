@@ -4,6 +4,7 @@ WORKDIR /app
 
 RUN npm install -g @quasar/cli
 
+
 # build stage
 FROM develop-stage as build-stage
 COPY . .
