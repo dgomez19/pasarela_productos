@@ -149,7 +149,7 @@ export class PaymentsService {
   private async discountProduct(id: number) {
     const product = await this.product.getProductById(id);
 
-    product.quantityAvailable = (product.quantityAvailable - 1);
+    product.quantityAvailable = product.quantityAvailable - 1;
     this.product.updateProduct(id, product);
   }
 
@@ -172,8 +172,12 @@ export class PaymentsService {
       }
 
       payment.status = data.data.transaction.status;
+
       payment.paymentWompiId = data.data.transaction.id;
-      payment.name = data.data.transaction.customerData?.fullName;
+
+      payment.name = data.data.transaction.customerData
+        ? data.data.transaction.customerData.fullName
+        : data.data.transaction.customer_data?.full_name;
       payment.email = data.data.transaction.customerEmail;
 
       if (data.data.transaction.status === this.STATUS_PAYMENT_APPROVED) {
