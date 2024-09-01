@@ -27,7 +27,7 @@ services:
     image: postgres:12
     container_name: pasarela-db
     ports:
-      - 5435:5432
+      - 5475:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=daniel
