@@ -19,6 +19,8 @@ import { Notify } from 'quasar'
 
 import { useRouter } from 'vue-router'
 
+import { sha256, sha224 } from 'js-sha256';
+
 const props = defineProps({ price: String, productId: Number, valueDelivery: String, quantityAvailable: Number })
 
 const $router = useRouter()
@@ -70,7 +72,6 @@ const generateModalWompi = async (reference) => {
 
     try {
       const { data } = await api.post('payments/listening-payment', newData)
-      console.log('data', data)
       $router.push(`payment/${data.paymentWompiId}/verify`)
     } catch(error) {
       console.log(error)
@@ -82,11 +83,17 @@ const generateSignature = async (reference, price) => {
 
   let signature = `${reference}${price}${CURRENCY}${INTEGRITY_KEY}`
 
-  const encondedText = new TextEncoder().encode(signature);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", encondedText);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-  
-  return hashHex
+  return sha256(signature)
+
+  // const encondedText = new TextEncoder().encode(signature);
+  // const hashBuffer = await crypto.subtle.digest("SHA-256", encondedText);
+
+  // const hashArray = Array.from(new Uint8Array(hashBuffer));
+  // const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+
+  // console.log(sha256(signature))
+  // console.log(hashHex)
+
+  // return hashHex
 }
 </script>
