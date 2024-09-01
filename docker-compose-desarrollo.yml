@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  dev-pasarela-frontend:
+    build:
+      context: ./frontend/
+      target: 'develop-stage'
+    image: dev-pasarela-frontend
+    container_name: dev-pasarela-frontend
+    command: sh -c 'npm install && quasar d'
+    ports:
+      - 9000:9000
+    restart: "no"
+    volumes:
+    - ./frontend:/app
+    depends_on:
+      - dev-pasarela-backend
+
+  dev-pasarela-backend:
+    build:
+      dockerfile: Dockerfile
+      context: backend/
+    ports:
+      - "3333:3333"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
+    env_file:
+      - ./backend/.env  # Load environment variables from the .env file in the current directory
+    depends_on:
+      - dev-pasarela-db
+
+  dev-pasarela-db:
+    restart: "no"
+    image: postgres:12
+    container_name: dev-pasarela-db
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=daniel
+      - POSTGRES_DB=wompi
+    volumes:
+      - pasarela_postgresql_data_desarrollo:/var/lib/postgresql/data
+volumes:
+  pasarela_postgresql_data_desarrollo:
