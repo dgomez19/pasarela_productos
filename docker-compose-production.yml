@@ -76,7 +76,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /root/projects/pasarela-total
+      device: /home/iid/projects/daniel/pasarela_productos/
       o: bind
 
 networks:
