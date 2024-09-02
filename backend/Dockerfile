@@ -9,7 +9,7 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm cache clean --force
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
@@ -18,7 +18,7 @@ COPY . .
 RUN npx prisma generate
 
 # Expose the port the app runs on, here, I was using port 3333
-EXPOSE 3000
+EXPOSE 8000
 
 # Command to run the app
 CMD [  "npm", "run", "start:prod" ]
