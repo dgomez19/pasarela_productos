@@ -16,11 +16,14 @@ services:
 
   # Backend service
   pasarela-backend:
+    container_name: pila-backend
     build: ./backend/  # Build the Docker image using the Dockerfile in the current directory
     ports:
       - "8000:8000"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
     depends_on:
       - pasarela-db
+    networks:
+      - app-network
 
   pasarela-db:
     restart: "no"
@@ -65,7 +68,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email daniel.gomez922@gmail.com --agree-tos --no-eff-email --force-renewal -d pasarelatotal.com -d www.pasarelatotal.com
+    command: certonly --webroot --webroot-path=/var/www/html --email daniel.gomez922@gmail.com --agree-tos --no-eff-email --force-renewal -d pilatotal.com -d www.pilatotal.com
 
 volumes:
   pasarela_postgresql_data_desarrollo:
