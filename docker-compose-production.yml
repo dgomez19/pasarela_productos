@@ -1,24 +1,24 @@
 version: '3.7'
 services:
-  # pasarela-frontend:
-  #   build:
-  #     context: ./frontend/
-  #     target: 'production-stage'
-  #   image: pasarela-frontend
-  #   container_name: pasarela-frontend
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./deploy/nginx.conf:/etc/nginx/nginx.conf
-  #   depends_on:
-  #     - pasarela-backend
-  #   ports:
-  #   - 80:80
+  pasarela-frontend:
+    build:
+      context: ./frontend/
+      target: 'production-stage'
+    image: pasarela-frontend
+    container_name: pasarela-frontend
+    restart: unless-stopped
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - pasarela-backend
+    ports:
+    - 80:80
 
   # Backend service
   pasarela-backend:
     build: ./backend/  # Build the Docker image using the Dockerfile in the current directory
     ports:
-      - "80:80"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
+      - "3000:3000"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
     depends_on:
       - pasarela-db
 

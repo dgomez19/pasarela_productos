@@ -17,8 +17,8 @@ COPY . .
 # Generate Prisma Client code
 RUN npx prisma generate
 
-# Expose the port the app runs on, here, I was using port 8000
-EXPOSE 80
+# Expose the port the app runs on, here, I was using port 3333
+EXPOSE 3000
 
 # Command to run the app
 CMD [  "npm", "run", "start:prod" ]
