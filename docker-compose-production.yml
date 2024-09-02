@@ -11,8 +11,8 @@ services:
       - ./deploy/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - pasarela-backend
-    ports:
-    - 80:80
+    expose:
+      - 8080
 
   # Backend service
   pasarela-backend:
@@ -36,15 +36,49 @@ services:
       - pasarela_postgresql_data_desarrollo:/var/lib/postgresql/data
 
 
-  # pasarela-backend:
-  #   build:
-  #     dockerfile: Dockerfile
-  #     context: ./backend/
-  #     args:
-  #       requirements: requirements/produccion.txt
-  #   image: pasarela-backend
-  #   restart: unless-stopped
-  #   container_name: pasarela-backend
-  #   command: sh -c 'npm install && npm run start'
+
+  webserver:
+    image: nginx:latest
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - web-root:/var/www/html
+      - ./deploy/nginx_ssl.conf:/etc/nginx/nginx.conf
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+
+    depends_on:
+      - pasarela-frontend
+      - pasarela-backend
+    networks:
+      - app-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - webserver
+    command: certonly --webroot --webroot-path=/var/www/html --email daniel.gomez922@gmail.com --agree-tos --no-eff-email --force-renewal -d pasarelatotal.com -d www.pasarelatotal.com
+
 volumes:
   pasarela_postgresql_data_desarrollo:
+
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /root/projects/pasarela-total
+      o: bind
+
+networks:
+  app-network:
+    driver: bridge
