@@ -16,7 +16,7 @@ services:
 
   # Backend service
   pasarela-backend:
-    container_name: pila-backend
+    container_name: pasarela-backend
     build: ./backend/  # Build the Docker image using the Dockerfile in the current directory
     ports:
       - "8000:8000"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
