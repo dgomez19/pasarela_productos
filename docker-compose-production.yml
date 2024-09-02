@@ -19,21 +19,21 @@ services:
     build: ./backend/  # Build the Docker image using the Dockerfile in the current directory
     ports:
       - "80:80"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
-  #   depends_on:
-  #     - pasarela-db
+    depends_on:
+      - pasarela-db
 
-  # pasarela-db:
-  #   restart: "no"
-  #   image: postgres:12
-  #   container_name: pasarela-db
-  #   ports:
-  #     - 5475:5432
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=daniel
-  #     - POSTGRES_DB=wompi
-  #   volumes:
-  #     - pasarela_postgresql_data_desarrollo:/var/lib/postgresql/data
+  pasarela-db:
+    restart: "no"
+    image: postgres:12
+    container_name: pasarela-db
+    ports:
+      - 5475:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=daniel
+      - POSTGRES_DB=wompi
+    volumes:
+      - pasarela_postgresql_data_desarrollo:/var/lib/postgresql/data
 
 
   # pasarela-backend:
