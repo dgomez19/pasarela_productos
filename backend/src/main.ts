@@ -9,6 +9,6 @@ async function bootstrap() {
     prefix: '/static/',
   });
   app.enableCors();
-  await app.listen(8000);
+  await app.listen(80);
 }
 bootstrap();

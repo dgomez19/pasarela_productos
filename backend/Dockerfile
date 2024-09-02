@@ -18,7 +18,7 @@ COPY . .
 RUN npx prisma generate
 
 # Expose the port the app runs on, here, I was using port 8000
-EXPOSE 8000
+EXPOSE 80
 
 # Command to run the app
 CMD [  "npm", "run", "start:prod" ]

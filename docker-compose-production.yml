@@ -1,39 +1,39 @@
 version: '3.7'
 services:
-  pasarela-frontend:
-    build:
-      context: ./frontend/
-      target: 'production-stage'
-    image: pasarela-frontend
-    container_name: pasarela-frontend
-    restart: unless-stopped
-    volumes:
-      - ./deploy/nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - pasarela-backend
-    ports:
-    - 80:80
+  # pasarela-frontend:
+  #   build:
+  #     context: ./frontend/
+  #     target: 'production-stage'
+  #   image: pasarela-frontend
+  #   container_name: pasarela-frontend
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./deploy/nginx.conf:/etc/nginx/nginx.conf
+  #   depends_on:
+  #     - pasarela-backend
+  #   ports:
+  #   - 80:80
 
   # Backend service
   pasarela-backend:
     build: ./backend/  # Build the Docker image using the Dockerfile in the current directory
     ports:
-      - "8099:8000"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
-    depends_on:
-      - pasarela-db
+      - "80:80"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
+  #   depends_on:
+  #     - pasarela-db
 
-  pasarela-db:
-    restart: "no"
-    image: postgres:12
-    container_name: pasarela-db
-    ports:
-      - 5475:5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=daniel
-      - POSTGRES_DB=wompi
-    volumes:
-      - pasarela_postgresql_data_desarrollo:/var/lib/postgresql/data
+  # pasarela-db:
+  #   restart: "no"
+  #   image: postgres:12
+  #   container_name: pasarela-db
+  #   ports:
+  #     - 5475:5432
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=daniel
+  #     - POSTGRES_DB=wompi
+  #   volumes:
+  #     - pasarela_postgresql_data_desarrollo:/var/lib/postgresql/data
 
 
   # pasarela-backend:
